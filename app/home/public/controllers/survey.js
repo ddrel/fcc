@@ -1,4 +1,4 @@
-FCC.controller("surveyController", function( $scope, $http,$rootScope,$window,$timeout) {
+FCC.controller("surveyController", function( $scope, $http,$rootScope,$window,$timeout,fcc_socket) {
 
 $scope.broadcastedQuestion = {};
 $scope.answeredQuestion = [];
@@ -102,7 +102,7 @@ $scope.sendanswer = function(item){
             $scope.txtanswer = ($scope.broadcastedQuestion.question.type=="free") ?$scope.answeredQuestion.answer:"";
             
             //notify server that client answered the question
-            participant_socket.emit("respondanswer",{});
+            fcc_socket.emit("respondanswer",{});
             toastr.success("Successfully send your answer!");
             $scope.setDisplayTemplate("answeredquestion_template")
     }).error(function(resp){
@@ -120,16 +120,16 @@ $scope.sendMessage = function(){
 
 $scope.init = function(){ 
     $scope.isInit=true;;         
-    $scope.getBroadcastQuestion();
-    participant_socket = io("/participant").connect();
-    participant_socket.on('questionready', function (data) {
-        $scope.getBroadcastQuestion();
-    });
-
+    $scope.getBroadcastQuestion();    
 }
 
+
+fcc_socket.on('questionready', function (data) {
+    $scope.getBroadcastQuestion();
+});
+
 $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
-    participant_socket.disconnect();
+    //fcc_socket.disconnect();
     $scope.isInit=false;
     
 });

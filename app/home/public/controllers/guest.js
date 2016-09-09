@@ -109,7 +109,7 @@ $scope.init =  function(){
     });
 
     //socket
-    public_socket.on("broadcastinfo",function(){
+    fcc_socket.on("broadcastinfo",function(){
         $scope.init();
     });
 

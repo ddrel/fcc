@@ -1,6 +1,6 @@
 'user strict';
 
-FCC.controller("mainHomeController", function( $scope, $http,$rootScope,DialogService,$timeout,utilities) {
+FCC.controller("mainHomeController", function( $scope, $http,$rootScope,DialogService,$timeout,utilities,fcc_socket) {
 $scope.eventsCollection = []; 
 $scope.selectedEvent={};
 $scope.published ={};
@@ -115,7 +115,7 @@ $scope.init = function(){
             $scope.currentQuestion = resp.question || {};
             $scope.setupchart(resp.question);     
             // included the getrespond                    
-            admin_socket.emit("getclientconnected",{}); 
+            fcc_socket.emit("getclientconnected",{}); 
             $scope.getrespond();  
            
             $timeout(function(){
@@ -128,17 +128,17 @@ $scope.init = function(){
     });  
 }//end init
 //socket event
-admin_socket.on("participantCount",function(count){
+fcc_socket.on("participantCount",function(count){
     $scope.participantCount = count;   
     $scope.$apply();
 });
 
 
-admin_socket.on("clientrespondtoquestion",function(data){
+fcc_socket.on("clientrespondtoquestion",function(data){
     $scope.getrespond();
 });
 
-admin_socket.on("participantclientconnected",function(count){
+fcc_socket.on("participantclientconnected",function(count){
     $scope.participantCount = count;
     //$scope.$apply();
 });
@@ -150,9 +150,9 @@ $scope.broadcastSelected = function(item){
     $http.post('/ws/published/setquestionpublished',item).success(function(resp){
                 $scope.currentQuestion = resp.question;
                 toastr.success("Successfully broadcast question...");
-                io("/admin").emit("broadcastquestion",{});
                 $scope.resetChart();
                 $scope.getrespond();
+                fcc_socket.emit("broadcastquestion",{});                              
             }).error(function(err){
                 toastr.error("Broadcast question error...");
                 console.log(err);

@@ -51,27 +51,38 @@
      <!-- socket -->
     <script src="/socket.io/socket.io.js"></script>  
     <script>
-        //io.connect({transports: ['websocket']})
+        //io.connect({transports: ['websocket']})      
     </script>   
    
     {% if users.roles.indexOf("ADMIN") >-1  %}
     <script>
-        var admin_socket = io.connect('/admin');    
+        //var admin_socket = io.connect('/admin');    
     </script>
     {% elif users.roles.indexOf("GUEST") %}
     <script>
-        admin_socket = {};
+        //admin_socket = {};
         //var participant_socket = io.connect('/participant');  
-        var public_socket =  io.connect('/public');  
+        // var public_socket =  io.connect('/public');  
     </script>
     {% else %}
     <script>
-        var public_socket =  io.connect('/public');
+        //var public_socket =  io.connect('/public');
     </script>    
     {% endif %}
 
     <script>       
         var FCC = angular.module('FCC', ['ui.router','ngSanitize','ui.bootstrap','ui.sortable','chart.js']);
+        FCC.factory('fcc_socket', ['$rootScope', function($rootScope) {
+            var socket = io.connect();
+            return {
+                on: function(eventName, callback){
+                    socket.on(eventName, callback);
+                },
+                emit: function(eventName, data) {
+                    socket.emit(eventName, data);
+                }
+            };
+            }]);
     </script>
 
 

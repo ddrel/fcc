@@ -1,5 +1,5 @@
 (function(){
-  FCC.controller("publicController", function( $scope, $http,$rootScope,utilities) {
+  FCC.controller("publicController", function( $scope, $http,$rootScope,utilities,public_socket) {
 $scope.selectedEvent={};
 $scope.published ={};
 $scope.currentQuestion = {}; 

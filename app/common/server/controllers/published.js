@@ -28,11 +28,9 @@ exports.setquestionpublished = (req,res)=>{
     mongoose.model("published").findOne({}).exec(function(err,doc){
         if(!err){
             doc.question = {};              
-            for(var key in data){
-                console.log(data[key]);
+            for(var key in data){                
                     doc.question[key] = data[key];
             }            
-            console.log(doc);
             doc.save(function(err,doc){
                 if(!err){
                     return res.status(200).json(doc);

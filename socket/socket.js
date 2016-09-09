@@ -4,6 +4,10 @@ var __participant__connected = 0;
 
 module.exports= function(wsserver,SessionStore){
 const io = require('socket.io')(wsserver);
+
+
+
+
 var authorization  = function(socket, next) {
     var handshake = socket.request;
     if (handshake.headers.cookie) {
@@ -25,8 +29,32 @@ var authorization  = function(socket, next) {
     next(new Error('not authorized'));
 }
 
-var participant = io.of('/participant');
+io.on("connection",function(socket){
+    var count = Object.keys(this.adapter.nsp.connected).length
+        socket.broadcast.emit("participantCount", count);
 
+    socket.on('respondanswer',function(data){                
+        socket.broadcast.emit("clientrespondtoquestion",data);
+        socket.broadcast.emit("broadcastinfo",{});
+    });
+
+    socket.on("broadcastquestion",function(data){
+        console.log("broadcastquestion");                   
+         this.broadcast.emit("broadcastinfo",{});
+         this.broadcast.emit("questionready",{});                  
+    });
+
+    socket.on('disconnect',function(){
+        var count = Object.keys(this.adapter.sids).length;                 
+        __participant__connected = count;
+        socket.broadcast.emit("participantCount", count);
+    });
+
+});
+
+
+/*
+var participant = io.of('/participant');
 participant.use(authorization)
 .on('connection', function (socket) {  
     var count = Object.keys(this.adapter.nsp.connected).length
@@ -45,6 +73,12 @@ participant.use(authorization)
         console.log(data);        
         admin.emit("clientrespondtoquestion",data);
         public.emit("broadcastinfo",{});
+    });
+
+    socket.on("broadcastquestion",function(data){
+         //console.log("messagee broadcast by admin")
+         socket.emit("questionready",data); 
+         socket.emit("broadcastinfo",{});         
     });
 
     socket.on("participantclientconnected",function(data){
@@ -68,7 +102,7 @@ var admin = io.of('/admin');
 admin.use(authorization)
 .on('connection', function (socket) {
      socket.on("broadcastquestion",function(data){
-         console.log("messae broadcast by admin")
+         //console.log("messagee broadcast by admin")
          participant.emit("questionready",data); 
          public.emit("broadcastinfo",{});         
     });
@@ -94,9 +128,9 @@ public.on('connection', function (socket) {
     
 });
 
+*/
 
-
-
+/*
 io.on('connection', function (socket) {
     console.log(socket.adapter.sids);   
     //console.log(Object.keys(socket)); 
@@ -106,5 +140,5 @@ io.on('connection', function (socket) {
 io.on('message', function (socket) {
  
 });
-
+*/
 }

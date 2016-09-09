@@ -40,17 +40,27 @@
     <script src="/common/js/plugins/metisMenu/jquery.metisMenu.js"></script>
     <script src="/common/js/plugins/pace/pace.min.js"></script>
     <script src="/common/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-    <script src="/common/js/plugins/ui-sortable/sortable.js"></script>
-      
-
+    <script src="/common/js/plugins/ui-sortable/sortable.js"></script>     
+    <script src="/socket.io/socket.io.js"></script> 
 
     <script>       
         var FCC = angular.module('FCC', ['ngSanitize','ui.bootstrap','ui.sortable','chart.js']);
-    </script>
-
-    <script src="/socket.io/socket.io.js"></script>  
+        FCC.factory('public_socket', ['$rootScope', function($rootScope) {
+            var socket = io.connect();
+            return {
+                on: function(eventName, callback){
+                socket.on(eventName, callback);
+                },
+                emit: function(eventName, data) {
+                socket.emit(eventName, data);
+                }
+            };
+            }]);
+    </script>  
     <script>
-        var public_socket = io.connect('/public');    
+        //$(function() {
+        //    var public_socket = io();
+        //})            
     </script>
       <!-- Angular factory --> 
     <script src="/common/utils/utils.js"></script>

@@ -25,6 +25,7 @@ dotenv.load({ path: '.env' });
 
 const app = express();
 
+mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGODB_DEV  || process.env.MONGODB_LOCAL);
 mongoose.connection.on('error', function() {
   console.log('MongoDB Connection Error. Please make sure that MongoDB is running.');
@@ -149,7 +150,8 @@ app.listen(app.get('port'), ()=> {
 */
 
 //init Socket
-const wsserver =  require('http').Server(app); //require('http').createServer()
+const wsserver =   require('http').Server(app); //require('http').createServer()
+
 require('./socket/socket')(wsserver,SessionStore);
  //var host = (process.env.VCAP_APP_HOST || 'localhost');
 var port = (process.env.VCAP_APP_PORT || 3000);
