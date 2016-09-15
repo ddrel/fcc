@@ -1,5 +1,5 @@
 'use strict';
-FCC.controller("guestHomeController", function( $scope, $http,$rootScope,DialogService,$timeout,utilities) {
+FCC.controller("guestHomeController", function( $scope, $http,$rootScope,DialogService,$timeout,utilities,fcc_socket) {
 $scope.chartData=[] 
 $scope.chart = {}; 
 $scope.broadcastedQuestion = null;

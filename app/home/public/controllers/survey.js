@@ -103,7 +103,7 @@ $scope.sendanswer = function(item){
             
             //notify server that client answered the question
             fcc_socket.emit("respondanswer",{});
-            toastr.success("Successfully send your answer!");
+            toastr.success("Successfully sent your answer!");
             $scope.setDisplayTemplate("answeredquestion_template")
     }).error(function(resp){
             toastr.error("Failed to submit answer!");

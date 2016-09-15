@@ -59,6 +59,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
 
+app.set("ipaddress",process.env.IPADDRESS || "localhost");
 
 // /MONGODB_DEV=mongodb://169.44.127.231:27017/fcc  --Bluemix container
 
@@ -140,23 +141,28 @@ options = {
     }
   }
 walk.walkSync(process.env.MODULE_PATH, options);
-
+app.use(function(req, res, next) { res.header('Access-Control-Allow-Origin', "*:*"); res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE'); res.header('Access-Control-Allow-Headers', 'Content-Type'); next();
+})
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 app.use('/bower_components', express.static(__dirname + '/bower_components'));
-/*
+/**/
 app.listen(app.get('port'), ()=> {
   console.log('Express server listening on port %d in %s mode', app.get('port'), app.get('env'));
 });
-*/
+
 
 //init Socket
-const wsserver =   require('http').Server(app); //require('http').createServer()
-
-require('./socket/socket')(wsserver,SessionStore);
+ const wsserver =  require('http').createServer(function(req,res){
+                    res.writeHead(200, {                     
+                     'Access-Control-Allow-Origin' : "http://" + process.env.IPADDRESS + ":" + app.get('socketPORT')});
+}) //require('http').Server(app);
+require('./socket/socket')(wsserver,SessionStore,app);
  //var host = (process.env.VCAP_APP_HOST || 'localhost');
-var port = (process.env.VCAP_APP_PORT || 3000);
-wsserver.listen(port);
-console.log("Server listining on port " + port + " in " + app.get('env'));
+ 
+ app.set('socketPORT',(app.get('port') + 1));
+var socketPort = (process.env.VCAP_APP_PORT || app.get('socketPORT'));
+wsserver.listen(socketPort);
+console.log("Server Socket listining on port " + socketPort + " in " + app.get('env'));
 //function () { console.log('Server  listening on port %d in %s mode', wsserver.address().port,"development")}
 module.exports = app;
 

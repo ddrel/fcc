@@ -3,7 +3,7 @@ FCC.controller("usersHomeController", function( $scope, $http,$rootScope,DialogS
 $scope.init =  function(){
     $http.get("/ws/users/getall").success(function(resp){
         $scope.users = resp;
-        console.log($scope.users);
+        //console.log($scope.users);
     }).error(function(resp){
             
     });

@@ -2,12 +2,10 @@ const cookie = require('cookie');
 const cookieParser = require('cookie-parser');
 var __participant__connected = 0;
 
-module.exports= function(wsserver,SessionStore){
-const io = require('socket.io')(wsserver);
-
-
-
-
+module.exports= function(wsserver,SessionStore,app){
+const _origins = "http://" + process.env.IPADDRESS + ":"  + "*" + " " + process.env.IPADDRESS + ":"  + "*";    
+const io = require('socket.io')(wsserver,{origins:'*:*'});
+io.set("origins","*:*");
 var authorization  = function(socket, next) {
     var handshake = socket.request;
     if (handshake.headers.cookie) {

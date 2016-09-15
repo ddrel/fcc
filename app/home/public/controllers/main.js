@@ -152,7 +152,7 @@ $scope.broadcastSelected = function(item){
                 toastr.success("Successfully broadcast question...");
                 $scope.resetChart();
                 $scope.getrespond();
-                fcc_socket.emit("broadcastquestion",{});                              
+               fcc_socket.emit("broadcastquestion",{});                              
             }).error(function(err){
                 toastr.error("Broadcast question error...");
                 console.log(err);
