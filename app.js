@@ -100,8 +100,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-
-options = {
+const options = {
   followLinks: false,
     listeners: {      
      directories:  (root, dirStatsArray, next)=> {
@@ -139,8 +138,11 @@ options = {
       }
     
     }
-  }
+  };
+
+
 walk.walkSync(process.env.MODULE_PATH, options);
+
 app.use(function(req, res, next) { res.header('Access-Control-Allow-Origin', "*:*"); res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE'); res.header('Access-Control-Allow-Headers', 'Content-Type'); next();
 })
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
